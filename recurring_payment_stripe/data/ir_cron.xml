@@ -1,0 +1,13 @@
+<odoo noupdate="1">
+    <!-- Cron Job para Procesar Facturas Vencidas Diariamente -->
+    <record id="ir_cron_process_due_invoices" model="ir.cron">
+        <field name="name">Process Overdue Invoices for Subscriptions</field>
+        <field name="model_id" ref="recurring_payment_stripe.model_account_move" />
+        <field name="state">code</field>
+        <field name="code">model.cron_process_due_invoices()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+    </record>
+</odoo>
