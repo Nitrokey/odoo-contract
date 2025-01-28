@@ -23,7 +23,7 @@ class AccountMove(models.Model):
             # Check if the subscription is recurring and has a payment method
             if subscription and subscription.charge_automatically:
                 provider = subscription.provider_id
-                stripe.api_key = provider.stripe_secret_key
+                stripe.api_key = provider.stripe_secret_key_prod if provider.state == 'enabled' else provider.stripe_secret_key_test
                 token = self._create_token(subscription)
                 try:
                     # Create the PaymentIntent and confirm it immediately
@@ -31,7 +31,7 @@ class AccountMove(models.Model):
                         # Stripe uses cents
                         amount=int(invoice.amount_total * 100),
                         currency=invoice.currency_id.name.lower(),
-                        customer=token.provider_ref,
+                        customer=token.acquirer_ref,
                         payment_method=token.stripe_payment_method,
                         automatic_payment_methods={"enabled": True},
                         # For automatic payments without user intervention
@@ -88,7 +88,7 @@ class AccountMove(models.Model):
 
         # If no token exists, create a new one
         if not token:
-            stripe.api_key = provider.stripe_secret_key
+            stripe.api_key = provider.stripe_secret_key_prod if provider.state == 'enabled' else provider.stripe_secret_key_test
 
             # Create a new Stripe customer
             customer = stripe.Customer.create(
@@ -102,7 +102,7 @@ class AccountMove(models.Model):
                 {
                     "provider_id": provider.id,
                     "partner_id": subscription.partner_id.id,
-                    "provider_ref": customer.id,
+                    "acquirer_ref": customer.id,
                     "verified": True,
                 }
             )

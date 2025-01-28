@@ -14,7 +14,8 @@ class TestPaymentStripeRecurring(TransactionCase):
             {
                 "name": "Stripe",
                 "code": "stripe",
-                "stripe_secret_key": "sk_test_4eC39HqLyjWDarjtT1zdp7dc",
+                "stripe_secret_key_test": "sk_test_4eC39HqLyjWDarjtT1zdp7dc",
+                "state": "test",
             }
         )
         cls.sale_journal = cls.env["account.journal"].search(
@@ -163,16 +164,16 @@ class TestPaymentStripeRecurring(TransactionCase):
         )
 
     def test_stripe_payment_intent(self):
-        stripe.api_key = self.provider.stripe_secret_key
+        stripe.api_key = self.provider.stripe_secret_key_test
         provider = self.sub8.provider_id
-        stripe.api_key = provider.stripe_secret_key
+        stripe.api_key = provider.stripe_secret_key_test
         token = self.invoice._create_token(self.sub8)
 
         payment_intent = stripe.PaymentIntent.create(
             # Stripe uses cents
             amount=int(self.invoice.amount_total * 100),
             currency=self.invoice.currency_id.name.lower(),
-            customer=token.provider_ref,
+            customer=token.acquirer_ref,
             payment_method=token.stripe_payment_method,
             automatic_payment_methods={"enabled": True},
             # For automatic payments without user intervention
