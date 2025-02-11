@@ -7,5 +7,5 @@ class SaleSubscription(models.Model):
     charge_automatically = fields.Boolean(default=True)
     provider_id = fields.Many2one(
         string="Provider",
-        comodel_name="payment.provider",
+        comodel_name="payment.acquirer",
     )

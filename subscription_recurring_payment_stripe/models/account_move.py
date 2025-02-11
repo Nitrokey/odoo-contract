@@ -33,7 +33,7 @@ class AccountMove(models.Model):
                     # Prepare payment data
                     provider = invoice.subscription_id.provider_id
                     method_line = self.env["account.payment.method.line"].search(
-                        [("payment_method_id.code", "=", provider.code)],
+                        [("payment_method_id.code", "=", provider.provider)],
                         limit=1,
                     )
                     journal = self.env["account.journal"].search(

@@ -15,7 +15,7 @@
                 <field
                     name="payment_token_id"
                     options="{'no_create': True, 'no_open': True}"
-                    domain="[('partner_id', '=', partner_id), ('provider_id', '=', provider_id)]"
+                    domain="[('partner_id', '=', partner_id), ('acquirer_id', '=', provider_id)]"
                     attrs="{'invisible': [('charge_automatically', '=', False)]}"
                 />
             </field>
