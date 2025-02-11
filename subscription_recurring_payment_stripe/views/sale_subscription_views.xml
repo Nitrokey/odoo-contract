@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- View sale.subscription form -->
+    <record id="subscription_recurring_payment_stripe_form" model="ir.ui.view">
+        <field name="name">subscription.recurring.payment.stripe.form</field>
+        <field name="model">sale.subscription</field>
+        <field
+            name="inherit_id"
+            ref="subscription_recurring_payment.sale_subscription_form"
+        />
+        <field name="priority">17</field>
+        <field name="arch" type="xml">
+            <field name="provider_id" position="after">
+                <field
+                    name="payment_token_id"
+                    options="{'no_create': True, 'no_open': True}"
+                    domain="[('partner_id', '=', partner_id), ('provider_id', '=', provider_id)]"
+                    attrs="{'invisible': [('charge_automatically', '=', False)]}"
+                />
+            </field>
+
+        </field>
+    </record>
+
+</odoo>
